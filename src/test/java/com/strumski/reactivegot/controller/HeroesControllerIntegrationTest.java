@@ -131,22 +131,18 @@ public class HeroesControllerIntegrationTest {
     @Test
     public void testDeleteAll() {
         testCountQuick(4);
-
         client.delete().uri("/heroes")
                 .exchange()
                 .expectStatus().is2xxSuccessful();
-
         testCountQuick(0);
     }
 
     @Test
     public void testDeleteHero() {
         testCountQuick(4);
-
         client.delete().uri("/heroes/Robb Stark")
                 .exchange()
                 .expectStatus().is2xxSuccessful();
-
         testCountQuick(3);
     }
 
@@ -156,5 +152,27 @@ public class HeroesControllerIntegrationTest {
                 .expectStatus().isOk()
                 .expectBodyList(Hero.class)
                 .hasSize(count);
+    }
+
+    @Test
+    public void testUpdateNonExistingHero() {
+        client.put().uri("/heroes")
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(new Hero("Sansa Stark", House.STARKS)), Hero.class)
+                .exchange()
+                .expectStatus().is4xxClientError();
+    }
+
+    @Test
+    public void testUpdateExistingHero() {
+        client.put().uri("/heroes/Ned Stark")
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(new Hero("Ned Stark", House.TARGARYENS)), Hero.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.house").isEqualTo("Targaryens");
     }
 }

@@ -97,6 +97,10 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
+                            <excludes>
+                                <exclude>**/*Constants.*</exclude>
+                                <exclude>**/*ReactiveGotApplication.*</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
