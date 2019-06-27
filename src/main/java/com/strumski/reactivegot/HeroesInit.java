@@ -29,16 +29,13 @@ import java.util.List;
 
 @Component
 public class HeroesInit implements ApplicationRunner {
-    private final static List<House> houses = Arrays.asList(
-            new House("Starks"),
-            new House("Targaryens")
-    );
+
 
     private final static List<Hero> heroes = Arrays.asList(
-            new Hero("Jon Snow", houses.get(0)),
-            new Hero("Ned Stark", houses.get(0)),
-            new Hero("Robb Stark", houses.get(0)),
-            new Hero("Daenerys Targaryen", houses.get(1))
+            new Hero("Jon Snow", House.STARKS),
+            new Hero("Ned Stark", House.STARKS),
+            new Hero("Robb Stark", House.STARKS),
+            new Hero("Daenerys Targaryen", House.TARGARYENS)
     );
 
     @Autowired

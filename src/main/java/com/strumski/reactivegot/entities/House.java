@@ -15,13 +15,26 @@
  */
 package com.strumski.reactivegot.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class House {
-    private String name;
+public enum House {
+    STARKS("Starks"), TARGARYENS("Targaryens");
+    private final String name;
+    House(String name) {
+        this.name = name;
+    }
+    @JsonValue
+    public String getName() {
+        return name;
+    }
+
+    public static House fromString(String text) {
+        for (House house : House.values()) {
+            if (house.name.equalsIgnoreCase(text)) {
+                return house;
+            }
+        }
+        return null;
+    }
+
 }

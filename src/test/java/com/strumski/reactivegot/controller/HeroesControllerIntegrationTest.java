@@ -37,8 +37,8 @@ import java.util.List;
 public class HeroesControllerIntegrationTest {
 
     List<House> houses = Arrays.asList(
-        new House("Starks"),
-        new House("Targaryens")
+        House.STARKS,
+        House.TARGARYENS
     );
 
     List<Hero> heroes = Arrays.asList(

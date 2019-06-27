@@ -27,12 +27,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Hero {
     @Id
-    private String id;
     private String name;
     private House house;
-
-    public Hero(String name, House house) {
-        this.name = name;
-        this.house = house;
-    }
 }

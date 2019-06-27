@@ -18,12 +18,15 @@ package com.strumski.reactivegot.controller;
 import com.strumski.reactivegot.dao.HeroesRepository;
 import com.strumski.reactivegot.entities.Hero;
 import com.strumski.reactivegot.entities.House;
+import com.strumski.reactivegot.exceptions.HouseNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/heroes")
@@ -52,9 +55,13 @@ public class HeroesController {
         return dao.save(hero);
     }
 
-    @GetMapping("/house/{house}")
-    public Flux<Hero> getAllHeroesByHouse(@PathVariable String house) {
-        return dao.findAllByHouse(new House(house));
+    @GetMapping("/house/{houseName}")
+    public Flux<Hero> getAllHeroesByHouse(@PathVariable String houseName) {
+        House house = House.fromString(houseName);
+        if (house == null) {
+            throw new HouseNotFoundException();
+        }
+        return dao.findAllByHouse(house);
     }
 
     @DeleteMapping
