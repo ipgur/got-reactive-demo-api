@@ -58,6 +58,7 @@ public class HeroesController {
     }
 
     @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> deleteAllHeroes() {
         return dao.deleteAll();
     }

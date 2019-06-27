@@ -34,18 +34,18 @@ import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
-public class HeroesControllerTest {
+public class HeroesControllerIntegrationTest {
 
     List<House> houses = Arrays.asList(
-        new House("starks"),
-        new House("targerian")
+        new House("Starks"),
+        new House("Targaryens")
     );
 
     List<Hero> heroes = Arrays.asList(
-            new Hero("John Snow", houses.get(0)),
+            new Hero("Jon Snow", houses.get(0)),
             new Hero("Ned Stark", houses.get(0)),
-            new Hero("Rob Stark", houses.get(0)),
-            new Hero("Deneris Snowborn", houses.get(1))
+            new Hero("Robb Stark", houses.get(0)),
+            new Hero("Daenerys Targaryen", houses.get(1))
     );
 
     @Autowired
@@ -90,13 +90,12 @@ public class HeroesControllerTest {
 
     @Test
     public void testCreateHero() {
-
-        Hero arjaStark = new Hero("Arja Start", houses.get(0));
+        Hero aryaStark = new Hero("Arya Stark", houses.get(0));
 
         client.post().uri("/heroes")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(arjaStark), Hero.class)
+                .body(Mono.just(aryaStark), Hero.class)
                 .exchange()
                 .expectStatus().isCreated()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -116,5 +115,35 @@ public class HeroesControllerTest {
                 .expectBodyList(Hero.class)
                 .hasSize(3)
                 .consumeWith(System.out::println);
+    }
+
+    @Test
+    public void testDeleteAll() {
+        testCountQuick(4);
+
+        client.delete().uri("/heroes")
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+
+        testCountQuick(0);
+    }
+
+    @Test
+    public void testDeleteHero() {
+        testCountQuick(4);
+
+        client.delete().uri("/heroes/Robb Stark")
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+
+        testCountQuick(3);
+    }
+
+    private void testCountQuick(int count) {
+        client.get().uri("/heroes")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(Hero.class)
+                .hasSize(count);
     }
 }
