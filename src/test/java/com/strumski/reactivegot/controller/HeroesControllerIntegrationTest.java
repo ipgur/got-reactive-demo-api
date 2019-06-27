@@ -118,6 +118,17 @@ public class HeroesControllerIntegrationTest {
     }
 
     @Test
+    public void testHouseNotFoundException() {
+        client.get().uri("/heroes/house/{id}", "nonexisting")
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .exchange()
+                .expectStatus().is4xxClientError()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("No such house exists in game of thrones");
+    }
+
+    @Test
     public void testDeleteAll() {
         testCountQuick(4);
 
